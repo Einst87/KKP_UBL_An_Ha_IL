@@ -30,6 +30,9 @@ import android.preference.PreferenceManager;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
@@ -151,11 +154,16 @@ class Utils {
     }
 
     static void setLocationUpdatesResult(Context context, List<Location> locations) {
-        PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putString(KEY_LOCATION_UPDATES_RESULT, getLocationResultTitle(context, locations)
-                        + "\n" + getLocationResultText(context, locations))
-                .apply();
+        final String path = "Locations/123";
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
+        if (locations != null){
+            ref.setValue(locations);
+        }
+//        PreferenceManager.getDefaultSharedPreferences(context)
+//                .edit()
+//                .putString(KEY_LOCATION_UPDATES_RESULT, getLocationResultTitle(context, locations)
+//                        + "\n" + getLocationResultText(context, locations))
+//                .apply();
     }
 
     static String getLocationUpdatesResult(Context context) {
