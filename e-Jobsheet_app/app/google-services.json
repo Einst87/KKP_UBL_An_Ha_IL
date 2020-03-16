@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "682452561072",
+    "firebase_url": "https://e-jobsheet.firebaseio.com",
+    "project_id": "e-jobsheet",
+    "storage_bucket": "e-jobsheet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682452561072:android:765412fb64c44e96c95f75",
+        "android_client_info": {
+          "package_name": "com.einslabs.ejobsheet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682452561072-75pnnk61e5a6354pa0pgct08j8d78pne.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoLpLK9tOZaQJ_BtYTGEdp6x5TlBmYXFo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "682452561072-75pnnk61e5a6354pa0pgct08j8d78pne.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
