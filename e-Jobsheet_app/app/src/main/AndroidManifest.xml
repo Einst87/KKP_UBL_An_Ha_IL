@@ -2,7 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.einslabs.ejobsheet">
 
+    <!-- akses lokasi akurat -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <!--akses untuk scan qrcode-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.hardware.camera" />
+    <uses-permission android:name="android.hardware.camera.autofocus" />
+
+    <!-- akses internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
