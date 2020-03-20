@@ -1,6 +1,7 @@
 package com.einslabs.ejobsheet;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -45,7 +46,12 @@ public class ScanActivity extends Activity implements ZXingScannerView.ResultHan
         builder.setMessage(rawResult.getText());
         AlertDialog alert1 = builder.create();
         alert1.show();
+        Intent i = new Intent(this, EjobsheetActivity.class);
+
 
         mScannerView.resumeCameraPreview(this);
+
+        startActivity(i);
+        finish();
     }
 }

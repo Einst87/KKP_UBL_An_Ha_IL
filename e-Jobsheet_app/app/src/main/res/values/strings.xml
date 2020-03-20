@@ -12,4 +12,16 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="nm_cust">Nama Customer</string>
+    <string name="ejobsheet">e - Jobsheet</string>
+    <string name="alamat">Alamat</string>
+    <string name="model">Model :</string>
+    <string name="sn">SN</string>
+    <string name="teknisi">Teknisi</string>
+    <string name="kerusakan">Kerusakan :</string>
+    <string name="perbaikan">Perbaikan</string>
+    <string name="total">TextViewTotoal</string>
+    <string name="bw">BW</string>
+    <string name="color">Color</string>
+    <string name="pekerjaan">Pekerjaan Selesai?</string>
 </resources>
