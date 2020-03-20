@@ -3,6 +3,13 @@
     <string name="notification_text">Tracking, tap to cancel</string>
     <string name="transport_id" translatable="false">123</string>
     <string name="firebase_path" translatable="false">locations</string>
-    <string name="firebase_email" translatable="false">andi.play87@gmail.com</string>
-    <string name="firebase_password" translatable="false">andi0487</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <!-- Strings used for fragments for navigation -->
+
+    <string name="title_activity_login2">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
 </resources>

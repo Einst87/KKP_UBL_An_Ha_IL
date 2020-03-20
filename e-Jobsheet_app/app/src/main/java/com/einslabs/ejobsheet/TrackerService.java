@@ -4,14 +4,17 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -27,6 +30,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Map;
+import java.util.Set;
+
 //import android.support.v4.app.NotificationCompat;
 //import android.support.v4.content.ContextCompat;
 
@@ -35,7 +41,9 @@ public class TrackerService extends Service {
     private static final String TAG = TrackerService.class.getSimpleName();
 
     @Override
-    public IBinder onBind(Intent intent) {return null;}
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     @Override
     public void onCreate() {
@@ -71,17 +79,30 @@ public class TrackerService extends Service {
 
     private void loginToFirebase() {
         // Authenticate with Firebase, and request location updates
-        String email = getString(R.string.firebase_email);
-        String password = getString(R.string.firebase_password);
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-                email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+        final SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+        String email = sharedPreferences.getString ("email", "" ); //getString(R.string.firebase_email);
+        String password = sharedPreferences.getString("password", ""); //getString(R.string.firebase_password);
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "firebase auth success");
                     requestLocationUpdates();
+//                    Intent i = new Intent();
+//                    i.setComponent(new ComponentName(getApplicationContext().getPackageName(), TaskActivity.class.getName()));
+//                    startActivity(i);
                 } else {
                     Log.d(TAG, "firebase auth failed");
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("isLogin", false);
+                    editor.commit();
+                    Intent i = new Intent();
+                    i.setAction(Intent.ACTION_MAIN);
+                    i.addCategory(Intent.CATEGORY_LAUNCHER);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
+                    i.setComponent(new ComponentName(getApplicationContext().getPackageName(), LoginActivity.class.getName()));
+                    i.putExtra("msg", "Gagal login ke Firebase");
+                    startActivity(i);
                 }
             }
         });
