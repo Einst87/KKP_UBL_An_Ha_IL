@@ -2,6 +2,7 @@ package com.einslabs.ejobsheet;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -9,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 //import android.support.v4.app.ActivityCompat;
 //import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +20,14 @@ import android.widget.Toast;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.regex.Pattern;
+
+import static com.firebase.ui.auth.AuthUI.TAG;
 
 public class LoginActivity extends Activity {
 
@@ -57,9 +66,7 @@ public class LoginActivity extends Activity {
         if (sharedPreferences.getBoolean("isLogin", false)) {
             mEmail.setText(sharedPreferences.getString("email", ""));
             mLogin.setText(sharedPreferences.getString("password", ""));
-            Intent intent = new Intent(this, TaskActivity.class);
             startTrackerService();
-            startActivity(intent);
             finish();
         }
 
@@ -82,13 +89,30 @@ public class LoginActivity extends Activity {
                     if (!validateEmail() | !validatePassword()) {
                         return;
                     } else {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean("isLogin", true);
-                        editor.putString("email", mEmail.getText().toString());
-                        editor.putString("password", mPass.getText().toString());
-                        editor.commit();
-                        startTrackerService();
-                        finish();
+                        FirebaseAuth.getInstance().signInWithEmailAndPassword(mEmail.getText().toString(), mPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+                            @Override
+                            public void onComplete(Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    //Log.d(TAG, "firebase auth success");
+                                    //requestLocationUpdates();
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putBoolean("isLogin", true);
+                                    editor.putString("email", mEmail.getText().toString());
+                                    editor.putString("password", mPass.getText().toString());
+                                    editor.commit();
+                                    startTrackerService();
+                                    //Intent i = new Intent(, ScanActivity.class);
+                                    //startActivity(i);
+                                } else {
+                                    //Log.d(TAG, "firebase auth failed");
+                                    showToast();
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putBoolean("isLogin", false);
+                                    editor.commit();
+                                    return;
+                                }
+                            }
+                        });
                     }
                 }
             });
@@ -101,7 +125,12 @@ public class LoginActivity extends Activity {
 
     private void startTrackerService() {
         startService(new Intent(this, TrackerService.class));
+        startActivity(new Intent(this, ScanActivity.class));
         finish();
+    }
+
+    private void showToast(){
+        Toast.makeText(getApplicationContext(), "Email atau password salah", Toast.LENGTH_LONG).show();
     }
 
     @Override

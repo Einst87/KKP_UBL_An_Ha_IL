@@ -88,21 +88,11 @@ public class TrackerService extends Service {
                 if (task.isSuccessful()) {
                     Log.d(TAG, "firebase auth success");
                     requestLocationUpdates();
-//                    Intent i = new Intent();
-//                    i.setComponent(new ComponentName(getApplicationContext().getPackageName(), TaskActivity.class.getName()));
-//                    startActivity(i);
                 } else {
                     Log.d(TAG, "firebase auth failed");
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("isLogin", false);
                     editor.commit();
-                    Intent i = new Intent();
-                    i.setAction(Intent.ACTION_MAIN);
-                    i.addCategory(Intent.CATEGORY_LAUNCHER);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
-                    i.setComponent(new ComponentName(getApplicationContext().getPackageName(), LoginActivity.class.getName()));
-                    i.putExtra("msg", "Gagal login ke Firebase");
-                    startActivity(i);
                 }
             }
         });
