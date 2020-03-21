@@ -24,4 +24,18 @@
     <string name="bw">BW</string>
     <string name="color">Color</string>
     <string name="pekerjaan">Pekerjaan Selesai?</string>
+    <string name="ya">Ya</string>
+    <string name="tidak">Tidak</string>
+    <string name="submit">Submit</string>
+    <string name="logo_form">logo_form</string>
+    <string name="keterangan">Keterangan</string>
+    <string name="contoh_taskalfa_3050ci">Contoh. TaskAlfa 3050ci</string>
+    <string name="contoh_ilham">Contoh. Ilham</string>
+    <string name="contoh_vya445545">Contoh. VYA445545</string>
+    <string name="contoh_paper_jam">Contoh. Paper Jam</string>
+    <string name="contoh_bersihkan_pulley_casete">Contoh. Bersihkan Pulley Casete</string>
+    <string name="contoh_98786">Contoh. 98786</string>
+    <string name="contoh_7786">Contoh. 7786</string>
+    <string name="contoh_88765">Contoh. 88765</string>
+    <string name="contoh_harus_ganti_pulley">Contoh. Harus ganti Pulley</string>
 </resources>

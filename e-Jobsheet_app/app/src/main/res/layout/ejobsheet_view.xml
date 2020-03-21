@@ -27,7 +27,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"
                     android:layout_weight="1"
-                    android:contentDescription="logo_form"
+                    android:contentDescription="@string/logo_form"
                     android:maxWidth="10dp"
                     android:maxHeight="10dp"
                     app:srcCompat="@drawable/logo" />
@@ -104,7 +104,7 @@
                         android:width="50dp"
                         android:autofillHints=""
                         android:ems="10"
-                        android:hint="Contoh. TaskAlfa 3050ci"
+                        android:hint="@string/contoh_taskalfa_3050ci"
                         android:inputType="textPersonName" />
 
                     <EditText
@@ -115,7 +115,7 @@
                         android:width="50dp"
                         android:autofillHints=""
                         android:ems="10"
-                        android:hint="Contoh. VYA445545"
+                        android:hint="@string/contoh_vya445545"
                         android:inputType="textPersonName" />
 
                 </LinearLayout>
@@ -141,8 +141,9 @@
                         android:layout_weight="1"
                         android:width="50dp"
                         android:ems="10"
-                        android:hint="Contoh. Ilham"
-                        android:inputType="textPersonName" />
+                        android:hint="@string/contoh_ilham"
+                        android:inputType="textPersonName"
+                        android:autofillHints="" />
 
                 </LinearLayout>
 
@@ -165,7 +166,7 @@
                         android:height="85dp"
                         android:ems="10"
                         android:gravity="start|top"
-                        android:hint="Contoh. Paper Jam"
+                        android:hint="@string/contoh_paper_jam"
                         android:inputType="textMultiLine"
                         android:autofillHints="" />
 
@@ -183,8 +184,9 @@
                         android:height="85dp"
                         android:ems="10"
                         android:gravity="start|top"
-                        android:hint="Contoh. Bersihkan Pulley Casete"
-                        android:inputType="textMultiLine" />
+                        android:hint="@string/contoh_bersihkan_pulley_casete"
+                        android:inputType="textMultiLine"
+                        android:autofillHints="" />
 
                 </LinearLayout>
 
@@ -229,8 +231,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="Contoh. 98786"
-                        android:inputType="textPersonName" />
+                        android:hint="@string/contoh_98786"
+                        android:inputType="textPersonName"
+                        android:autofillHints="" />
 
                     <EditText
                         android:id="@+id/editText7"
@@ -238,8 +241,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="Contoh. 7786"
-                        android:inputType="textPersonName" />
+                        android:hint="@string/contoh_7786"
+                        android:inputType="textPersonName"
+                        android:autofillHints="" />
 
                     <EditText
                         android:id="@+id/editText8"
@@ -247,8 +251,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:hint="Contoh. 88765"
-                        android:inputType="textPersonName" />
+                        android:hint="@string/contoh_88765"
+                        android:inputType="textPersonName"
+                        android:autofillHints="" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -270,14 +275,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Ya" />
+                        android:text="@string/ya" />
 
                     <RadioButton
                         android:id="@+id/radioButton2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Tidak" />
+                        android:text="@string/tidak" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -289,7 +294,7 @@
                         android:id="@+id/textView20"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="TextView"
+                        android:text="@string/keterangan"
                         tools:text="Keterangan" />
 
                     <EditText
@@ -299,15 +304,16 @@
                         android:height="50dp"
                         android:ems="10"
                         android:gravity="start|top"
-                        android:hint="Contoh. Harus ganti Pulley"
-                        android:inputType="textMultiLine" />
+                        android:hint="@string/contoh_harus_ganti_pulley"
+                        android:inputType="textMultiLine"
+                        android:autofillHints="" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Submit" />
+                    android:text="@string/submit" />
 
             </LinearLayout>
 
