@@ -38,4 +38,8 @@
     <string name="contoh_7786">Contoh. 7786</string>
     <string name="contoh_88765">Contoh. 88765</string>
     <string name="contoh_harus_ganti_pulley">Contoh. Harus ganti Pulley</string>
+    <string name="agreement">Pelanggan</string>
+    <string name="clear_pad">Hapus</string>
+    <string name="save_signature">Simpan</string>
+    <string name="api_url">https://field.amidocabang.com/api/</string>
 </resources>

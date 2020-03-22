@@ -57,11 +57,6 @@ public class LoginActivity extends Activity {
         mPass = (TextView)  findViewById(R.id.input_password);
         mLogin = (Button) findViewById(R.id.btn_login);
 
-//        Intent i = getIntent();
-//        if (!i.getStringExtra("msg").equals("")){
-//            Toast.makeText(this, i.getStringExtra("msg"), Toast.LENGTH_LONG).show();
-//        }
-
         final SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
         if (sharedPreferences.getBoolean("isLogin", false)) {
             mEmail.setText(sharedPreferences.getString("email", ""));
@@ -93,23 +88,15 @@ public class LoginActivity extends Activity {
                             @Override
                             public void onComplete(Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    //Log.d(TAG, "firebase auth success");
-                                    //requestLocationUpdates();
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putBoolean("isLogin", true);
                                     editor.putString("email", mEmail.getText().toString());
                                     editor.putString("password", mPass.getText().toString());
                                     editor.commit();
                                     startTrackerService();
-                                    //Intent i = new Intent(, ScanActivity.class);
-                                    //startActivity(i);
                                 } else {
                                     //Log.d(TAG, "firebase auth failed");
-                                    showToast();
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                                    editor.putBoolean("isLogin", false);
-                                    editor.commit();
-                                    return;
+                                    showToast("Email atau password salah");
                                 }
                             }
                         });
@@ -125,12 +112,12 @@ public class LoginActivity extends Activity {
 
     private void startTrackerService() {
         startService(new Intent(this, TrackerService.class));
-        startActivity(new Intent(this, ScanActivity.class));
+        startActivity(new Intent(this, ProfileActivity.class));
         finish();
     }
 
-    private void showToast(){
-        Toast.makeText(getApplicationContext(), "Email atau password salah", Toast.LENGTH_LONG).show();
+    private void showToast(String msg){
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
 
     @Override
