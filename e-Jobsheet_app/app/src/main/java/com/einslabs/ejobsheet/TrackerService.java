@@ -90,9 +90,6 @@ public class TrackerService extends Service {
                     requestLocationUpdates();
                 } else {
                     Log.d(TAG, "firebase auth failed");
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("isLogin", false);
-                    editor.commit();
                 }
             }
         });

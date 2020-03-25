@@ -41,5 +41,7 @@
     <string name="agreement">Pelanggan</string>
     <string name="clear_pad">Hapus</string>
     <string name="save_signature">Simpan</string>
-    <string name="api_url">https://field.amidocabang.com/api/</string>
+    <string name="api_url">https://field.amidocabang.com/api</string>
+    <string name="title_activity_profile">Profile</string>
+    <string name="action_settings">Settings</string>
 </resources>

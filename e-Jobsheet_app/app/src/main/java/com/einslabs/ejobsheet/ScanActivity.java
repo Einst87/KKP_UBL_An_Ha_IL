@@ -93,7 +93,6 @@ public class ScanActivity extends Activity implements ZXingScannerView.ResultHan
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 getMsg("Tidak dapat menemukan data SN tersebut atau tidak ada koneksi internet");
-                return;
             }
 
             @Override
