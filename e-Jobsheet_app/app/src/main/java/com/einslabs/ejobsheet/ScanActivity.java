@@ -27,7 +27,7 @@ import okhttp3.Response;
 public class ScanActivity extends Activity implements ZXingScannerView.ResultHandler {
 
     private ZXingScannerView mScannerView;
-    public String apiUrl = getString(R.string.api_url);
+    //public String apiUrl = getString(R.string.api_url);
 
 
     @Override
@@ -65,7 +65,7 @@ public class ScanActivity extends Activity implements ZXingScannerView.ResultHan
 //        SharedPreferences.Editor editor = sharedPreferences.edit();
 //        editor.putString("SN", rawResult.getText());
 //        editor.apply();
-        getSN(apiUrl, rawResult.getText());
+        //getSN(apiUrl, rawResult.getText());
 
 
         mScannerView.resumeCameraPreview(this);

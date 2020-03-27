@@ -1,8 +1,10 @@
 <resources>
     <string name="app_name">e-Jobsheet</string>
     <string name="notification_text">Tracking, tap to cancel</string>
+    <string name="email">andi.play87@gmail.com</string>
+    <string name="password">andi0487</string>
     <string name="transport_id" translatable="false">123</string>
-    <string name="firebase_path" translatable="false">locations</string>
+    <string name="firebase_path" translatable="false">e-jobsheet</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!-- Strings used for fragments for navigation -->

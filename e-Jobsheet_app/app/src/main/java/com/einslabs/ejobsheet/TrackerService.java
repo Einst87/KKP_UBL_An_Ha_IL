@@ -33,12 +33,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Map;
 import java.util.Set;
 
-//import android.support.v4.app.NotificationCompat;
-//import android.support.v4.content.ContextCompat;
-
 public class TrackerService extends Service {
 
     private static final String TAG = TrackerService.class.getSimpleName();
+//    final SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+//    String email = sharedPreferences.getString ("email", "" );
+//    String password = sharedPreferences.getString("password", "");
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -79,10 +79,7 @@ public class TrackerService extends Service {
 
     private void loginToFirebase() {
         // Authenticate with Firebase, and request location updates
-        final SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
-        String email = sharedPreferences.getString ("email", "" ); //getString(R.string.firebase_email);
-        String password = sharedPreferences.getString("password", ""); //getString(R.string.firebase_password);
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(getString(R.string.email), getString(R.string.password)).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(Task<AuthResult> task) {
                 if (task.isSuccessful()) {
