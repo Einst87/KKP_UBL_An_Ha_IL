@@ -2,17 +2,20 @@ package com.einslabs.ejobsheet;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -29,6 +32,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Map;
@@ -61,6 +66,7 @@ public class LoginActivity extends Activity {
     private TextView mEmail;
     private TextView mPass;
     private Button mLogin;
+    private AlertDialog.Builder builder;
     //public String apiUrl = getString(R.string.api_url);
 
 
@@ -73,6 +79,7 @@ public class LoginActivity extends Activity {
         mEmail = (TextView) findViewById(R.id.input_email);
         mPass = (TextView) findViewById(R.id.input_password);
         mLogin = (Button) findViewById(R.id.btn_login);
+        builder = new AlertDialog.Builder(this);
 
 //        if (sharedPreferences.getBoolean("isLogin", false)) {
 //            mEmail.setText(sharedPreferences.getString("email", ""));
@@ -84,8 +91,14 @@ public class LoginActivity extends Activity {
         // Check GPS is enabled
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            showToast("Nyalakan GPS terlebih dahulu");
-            finish();
+            builder.setMessage("nyalakan GPS terlebih dahulu").setTitle("GPS")
+                    .setCancelable(false)
+                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    }).create().show();
         }
 
         // Check location permission is granted - if it is, start
@@ -100,24 +113,23 @@ public class LoginActivity extends Activity {
                     if (!validateEmail() | !validatePassword()) {
                         return;
                     } else {
+                        SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isLogin", true);
+                        editor.putString("email", mEmail.getText().toString());
+                        editor.putString("password", mPass.getText().toString());
+                        editor.commit();
                         getTeknisiData(mEmail.getText().toString());
-//                        startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
-//                        finish();
+                        startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                        startTrackerService();
 //                        mAuth.signInWithEmailAndPassword(mEmail.getText().toString(), mPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 //                            @Override
 //                            public void onComplete(Task<AuthResult> task) {
 //                                if (task.isSuccessful()) {
-//                                    SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
-//                                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                                    editor.putBoolean("isLogin", true);
-//                                    editor.putString("email", mEmail.getText().toString());
-//                                    editor.putString("password", mPass.getText().toString());
-//                                    editor.commit();
-//                                    //getTeknisiData(mEmail.getText().toString());
-//                                    startTrackerService();
+//
 //                                } else {
 //                                    //Log.d(TAG, "firebase auth failed");
-//                                    showToast("Email atau password salah");
+//                                    showDialog("Error", "Email atau password salah");
 //                                }
 //                            }
 //                        });
@@ -133,7 +145,6 @@ public class LoginActivity extends Activity {
 
     private void startTrackerService() {
         startService(new Intent(this, TrackerService.class));
-        //startActivity(new Intent(this, ScanActivity.class));
         finish();
     }
 
@@ -154,35 +165,35 @@ public class LoginActivity extends Activity {
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                showToast("Tidak dapat menemukan data teknisi atau tidak ada koneksi internet");
+                showDialog("Gagal", "Tidak dapat terhubung ke server atau tidak ada koneksi internet");
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                Gson gson = new Gson();
                 JsonParser parser = new JsonParser();
-                JsonElement element = parser.parse(response.body().toString());
+                JsonElement element = parser.parse(response.body().string());
                 JsonObject obj = element.getAsJsonObject();
-                Set<Map.Entry<String, JsonElement>> entrySet = obj.entrySet();
                 if (response.code() == 200) {
-                    showToast(response.body().toString());
-//                    SharedPreferences sharedPreferences = getSharedPreferences("teknisi", MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    for (Map.Entry<String, JsonElement> entry : entrySet) {
-//                        editor.putString(entry.getKey(), entry.getValue().getAsString());
-//                    }
-//                    editor.apply();
+                    SharedPreferences sharedPreferences = getSharedPreferences("teknisi", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("nik_teknisi", obj.get("nik_teknisi").getAsString());
+                    editor.putString("foto_teknisi", obj.get("foto_teknisi").getAsString());
+                    editor.putString("nama", obj.get("nama").getAsString());
+                    editor.putString("no_hp", obj.get("no_hp").getAsString());
+                    editor.putString("email", obj.get("email").getAsString());
+                    editor.putString("jabatan", obj.get("jabatan").getAsString());
+                    editor.putString("tgl_mulai_krj", obj.get("tgl_mulai_krj").getAsString());
+                    editor.putString("wilayah", obj.get("wilayah").getAsString());
+                    editor.putString("longitude", obj.get("longitude").getAsString());
+                    editor.putString("latitude", obj.get("latitude").getAsString());
+                    editor.commit();
                 }else{
                     String status = obj.get("status").getAsString();
                     String msg = obj.get("message").getAsString();
-                    showToast(status + " : " + msg);
+                    showDialog(status, msg);
                 }
             }
         });
-    }
-
-    private void showToast(String msg){
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
     }
 
 //    private void updateUI (FirebaseUser user) {
@@ -205,6 +216,15 @@ public class LoginActivity extends Activity {
         } else {
             finish();
         }
+    }
+
+    private void showDialog(final String status, final String msg) {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                builder.setMessage(msg).setTitle(status).create().show();
+            }
+        });
     }
 
 //    @Override
