@@ -38,23 +38,26 @@
                 android:background="@drawable/profile_bk">
 
                 <ImageView
+                    android:id="@+id/profile_img_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/profile_round" />
 
                 <TextView
+                    android:id="@+id/txtNm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="\@appsnippuser"
                     android:textSize="28dp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txtJabatan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="developer@appsnipp.com"
                     android:textSize="12dp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"

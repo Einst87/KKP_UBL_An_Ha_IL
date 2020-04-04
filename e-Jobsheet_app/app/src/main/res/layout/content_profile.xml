@@ -35,9 +35,10 @@
                 style="@style/profileDetailsTextMain" />
 
             <TextView
-                android:text="developer"
+                android:id="@+id/txtTkNm"
+                style="@style/profileDetailsMiniText"
                 android:layout_toRightOf="@id/nameImageView"
-                style="@style/profileDetailsMiniText" />
+                android:text="Nama Teknisi" />
 
         </RelativeLayout>
 
@@ -49,14 +50,15 @@
                 style="@style/profileDetailsImage" />
 
             <TextView
-                android:text="Mobile"
+                style="@style/profileDetailsTextMain"
                 android:layout_toRightOf="@id/mobileImageView"
-                style="@style/profileDetailsTextMain"/>
+                android:text="Mobile" />
 
             <TextView
-                android:text="+91-8129999999"
+                android:id="@+id/txtMobile"
+                style="@style/profileDetailsMiniText"
                 android:layout_toRightOf="@id/mobileImageView"
-                style="@style/profileDetailsMiniText" />
+                android:text="+91-8129999999" />
 
         </RelativeLayout>
 
@@ -73,9 +75,10 @@
                 style="@style/profileDetailsTextMain" />
 
             <TextView
-                android:text="developer@appsnipp.com"
+                android:id="@+id/txtTkEmail"
+                style="@style/profileDetailsMiniText"
                 android:layout_toRightOf="@id/emailImageView"
-                style="@style/profileDetailsMiniText" />
+                android:text="developer@appsnipp.com" />
 
         </RelativeLayout>
 
@@ -87,14 +90,15 @@
                 style="@style/profileDetailsImage" />
 
             <TextView
-                android:text="Address"
+                style="@style/profileDetailsTextMain"
                 android:layout_toRightOf="@id/addressImageView"
-                style="@style/profileDetailsTextMain" />
+                android:text="NIK" />
 
             <TextView
-                android:text="Avenue 2nd Street NW SY."
+                android:id="@+id/txtNik"
+                style="@style/profileDetailsMiniText"
                 android:layout_toRightOf="@id/addressImageView"
-                style="@style/profileDetailsMiniText" />
+                android:text="Avenue 2nd Street NW SY." />
 
         </RelativeLayout>
 
@@ -106,14 +110,15 @@
                 style="@style/profileDetailsImage" />
 
             <TextView
-                android:text="D.O.B"
+                style="@style/profileDetailsTextMain"
                 android:layout_toRightOf="@id/dobImageView"
-                style="@style/profileDetailsTextMain" />
+                android:text="Tanggal Mulai Kerja" />
 
             <TextView
-                android:text="12-05-1990"
+                android:id="@+id/txtMulaiKrj"
+                style="@style/profileDetailsMiniText"
                 android:layout_toRightOf="@id/dobImageView"
-                style="@style/profileDetailsMiniText" />
+                android:text="12-05-1990" />
 
         </RelativeLayout>
 

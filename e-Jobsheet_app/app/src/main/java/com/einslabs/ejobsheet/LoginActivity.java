@@ -67,7 +67,6 @@ public class LoginActivity extends Activity {
     private TextView mPass;
     private Button mLogin;
     private AlertDialog.Builder builder;
-    //public String apiUrl = getString(R.string.api_url);
 
 
     @Override
@@ -120,8 +119,6 @@ public class LoginActivity extends Activity {
                         editor.putString("password", mPass.getText().toString());
                         editor.commit();
                         getTeknisiData(mEmail.getText().toString());
-                        startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
-                        startTrackerService();
 //                        mAuth.signInWithEmailAndPassword(mEmail.getText().toString(), mPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 //                            @Override
 //                            public void onComplete(Task<AuthResult> task) {
@@ -143,11 +140,6 @@ public class LoginActivity extends Activity {
         }
     }
 
-    private void startTrackerService() {
-        startService(new Intent(this, TrackerService.class));
-        finish();
-    }
-
     //ambil data teknisi
     private  void getTeknisiData (String email) {
         MediaType urlEn =  MediaType.parse("application/x-www-form-urlencoded");
@@ -157,7 +149,7 @@ public class LoginActivity extends Activity {
 
         //start request ke server
         Request request = new Request.Builder()
-                .url("https://field.amidocabang.com/api/teknisi")
+                .url(getString(R.string.api_url) + "/teknisi")
                 .method("POST", body)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .build();
@@ -187,6 +179,8 @@ public class LoginActivity extends Activity {
                     editor.putString("longitude", obj.get("longitude").getAsString());
                     editor.putString("latitude", obj.get("latitude").getAsString());
                     editor.commit();
+                    startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                    finish();
                 }else{
                     String status = obj.get("status").getAsString();
                     String msg = obj.get("message").getAsString();
@@ -206,25 +200,25 @@ public class LoginActivity extends Activity {
 //        }
 //    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]
-            grantResults) {
-        if (requestCode == PERMISSIONS_REQUEST && grantResults.length == 1
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // Start the service when the permission is granted
-            startTrackerService();
-        } else {
-            finish();
-        }
-    }
-
-    private void showDialog(final String status, final String msg) {
+    public void showDialog(final String status, final String msg) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
                 builder.setMessage(msg).setTitle(status).create().show();
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[]
+            grantResults) {
+        if (requestCode == PERMISSIONS_REQUEST && grantResults.length == 1
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Start the service when the permission is granted
+            //startTrackerService();
+        } else {
+            finish();
+        }
     }
 
 //    @Override

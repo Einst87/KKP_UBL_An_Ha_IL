@@ -36,12 +36,18 @@ import java.util.Set;
 public class TrackerService extends Service {
 
     private static final String TAG = TrackerService.class.getSimpleName();
-//    final SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
-//    String email = sharedPreferences.getString ("email", "" );
-//    String password = sharedPreferences.getString("password", "");
+//    Intent i = getIntent();
+    private static String email ; //= i.getStringExtra("email");
+    private static String password ; //= i.getStringExtra("password");
+    private static String nik ; //= i.getStringExtra("nik");
 
     @Override
     public IBinder onBind(Intent intent) {
+
+//        email = intent.getStringExtra("email");
+//        password = intent.getStringExtra("password");
+//        nik = intent.getStringExtra("nik");
+
         return null;
     }
 
@@ -49,7 +55,7 @@ public class TrackerService extends Service {
     public void onCreate() {
         super.onCreate();
         buildNotification();
-        loginToFirebase();
+        loginToFirebase("andi.play87@gmail.com", "andi0487");
     }
 
     private void buildNotification() {
@@ -77,9 +83,9 @@ public class TrackerService extends Service {
         }
     };
 
-    private void loginToFirebase() {
+    private void loginToFirebase(final String email, final String password) {
         // Authenticate with Firebase, and request location updates
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(getString(R.string.email), getString(R.string.password)).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
             @Override
             public void onComplete(Task<AuthResult> task) {
                 if (task.isSuccessful()) {
@@ -98,7 +104,7 @@ public class TrackerService extends Service {
         request.setFastestInterval(5000);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
-        final String path = getString(R.string.firebase_path) + "/" + getString(R.string.transport_id);
+        final String path = getString(R.string.firebase_path) + "/" + nik;
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PackageManager.PERMISSION_GRANTED) {
