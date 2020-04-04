@@ -80,13 +80,6 @@ public class LoginActivity extends Activity {
         mLogin = (Button) findViewById(R.id.btn_login);
         builder = new AlertDialog.Builder(this);
 
-//        if (sharedPreferences.getBoolean("isLogin", false)) {
-//            mEmail.setText(sharedPreferences.getString("email", ""));
-//            mLogin.setText(sharedPreferences.getString("password", ""));
-//            startTrackerService();
-//            finish();
-//        }
-
         // Check GPS is enabled
         LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (!lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -118,18 +111,18 @@ public class LoginActivity extends Activity {
                         editor.putString("email", mEmail.getText().toString());
                         editor.putString("password", mPass.getText().toString());
                         editor.commit();
-                        getTeknisiData(mEmail.getText().toString());
-//                        mAuth.signInWithEmailAndPassword(mEmail.getText().toString(), mPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                            @Override
-//                            public void onComplete(Task<AuthResult> task) {
-//                                if (task.isSuccessful()) {
-//
-//                                } else {
-//                                    //Log.d(TAG, "firebase auth failed");
-//                                    showDialog("Error", "Email atau password salah");
-//                                }
-//                            }
-//                        });
+                        mAuth.signInWithEmailAndPassword(mEmail.getText().toString(), mPass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    startService(new Intent(LoginActivity.this, TrackerService.class));
+                                    getTeknisiData(mEmail.getText().toString());
+                                } else {
+                                    //Log.d(TAG, "firebase auth failed");
+                                    showDialog("Error", "Email atau password salah");
+                                }
+                            }
+                        });
                     }
                 }
             });
@@ -190,16 +183,6 @@ public class LoginActivity extends Activity {
         });
     }
 
-//    private void updateUI (FirebaseUser user) {
-//        if (user != null){
-//            //mEmail.setText(user.getEmail());
-//            //Uri photoUrl = user.getPhotoUrl();
-//            startService(new Intent(this, TrackerService.class));
-//            startActivity(new Intent(this, ProfileActivity.class));
-//            finish();
-//        }
-//    }
-
     public void showDialog(final String status, final String msg) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -221,13 +204,20 @@ public class LoginActivity extends Activity {
         }
     }
 
-//    @Override
-//    public void onStart () {
-//        super.onStart();
+    @Override
+    public void onStart () {
+        super.onStart();
 //        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        updateUI(currentUser);
-//    }
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
+            if (sharedPreferences.getBoolean("isLogin", false)) {
+                startService(new Intent(this, TrackerService.class));
+                startActivity(new Intent(this, ProfileActivity.class));
+                finish();
+            }
+        }
+    }
 
     private boolean validateEmail() {
         String emailInput = mEmail.getText().toString().trim();

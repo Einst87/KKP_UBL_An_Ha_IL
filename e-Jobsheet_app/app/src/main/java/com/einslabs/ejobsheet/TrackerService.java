@@ -27,6 +27,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -37,25 +38,27 @@ public class TrackerService extends Service {
 
     private static final String TAG = TrackerService.class.getSimpleName();
 //    Intent i = getIntent();
-    private static String email ; //= i.getStringExtra("email");
-    private static String password ; //= i.getStringExtra("password");
+    //private static String email ; //= i.getStringExtra("email");
+    //private static String password ; //= i.getStringExtra("password");
     private static String nik ; //= i.getStringExtra("nik");
+    //private FirebaseAuth mAuth;
 
     @Override
-    public IBinder onBind(Intent intent) {
-
-//        email = intent.getStringExtra("email");
-//        password = intent.getStringExtra("password");
-//        nik = intent.getStringExtra("nik");
-
-        return null;
-    }
+    public IBinder onBind(Intent intent) {return null;}
 
     @Override
     public void onCreate() {
         super.onCreate();
         buildNotification();
-        loginToFirebase("andi.play87@gmail.com", "andi0487");
+        requestLocationUpdates();
+        //loginToFirebase("andi.play87@gmail.com", "andi0487");
+
+//        mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if (currentUser != null) {
+//            requestLocationUpdates();
+//        }
+
     }
 
     private void buildNotification() {
@@ -69,7 +72,7 @@ public class TrackerService extends Service {
                 .setContentText(getString(R.string.notification_text))
                 .setOngoing(true)
                 .setContentIntent(broadcastIntent)
-                .setSmallIcon(R.drawable.ic_launcher_foreground);
+                .setSmallIcon(R.drawable.logo_small);
         startForeground(1, builder.build());
     }
 
@@ -83,28 +86,29 @@ public class TrackerService extends Service {
         }
     };
 
-    private void loginToFirebase(final String email, final String password) {
-        // Authenticate with Firebase, and request location updates
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
-            @Override
-            public void onComplete(Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    Log.d(TAG, "firebase auth success");
-                    requestLocationUpdates();
-                } else {
-                    Log.d(TAG, "firebase auth failed");
-                }
-            }
-        });
-    }
+//    private void loginToFirebase(final String email, final String password) {
+//        // Authenticate with Firebase, and request location updates
+//        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
+//            @Override
+//            public void onComplete(Task<AuthResult> task) {
+//                if (task.isSuccessful()) {
+//                    Log.d(TAG, "firebase auth success");
+//                    requestLocationUpdates();
+//                } else {
+//                    Log.d(TAG, "firebase auth failed");
+//                }
+//            }
+//        });
+//    }
 
     private void requestLocationUpdates() {
+        SharedPreferences sharedPreferences = getSharedPreferences("teknisi", MODE_PRIVATE);
         LocationRequest request = new LocationRequest();
         request.setInterval(10000);
         request.setFastestInterval(5000);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
-        final String path = getString(R.string.firebase_path) + "/" + nik;
+        final String path = getString(R.string.firebase_path) + "/" +  sharedPreferences.getString("nik_teknisi", "");
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PackageManager.PERMISSION_GRANTED) {

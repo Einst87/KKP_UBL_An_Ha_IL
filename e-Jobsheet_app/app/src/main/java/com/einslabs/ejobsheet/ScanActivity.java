@@ -52,6 +52,13 @@ public class ScanActivity extends Activity implements ZXingScannerView.ResultHan
     }
 
     @Override
+    public void onBackPressed() {
+        Intent i = new Intent ( this, ProfileActivity.class);
+        startActivity(i);
+        super.onBackPressed();
+    }
+
+    @Override
     public void handleResult(Result rawResult) {
 //        Log.v("TAG", rawResult.getText()); // Prints scan results
 //        Log.v("TAG", rawResult.getBarcodeFormat().toString());

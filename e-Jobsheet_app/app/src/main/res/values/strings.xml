@@ -1,8 +1,7 @@
 <resources>
     <string name="app_name">e-Jobsheet</string>
     <string name="notification_text">Tracking, tap to cancel</string>
-    <string name="transport_id" translatable="false">123</string>
-    <string name="firebase_path" translatable="false">e-jobsheet</string>
+    <string name="firebase_path" translatable="false">location</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <!-- Strings used for fragments for navigation -->
@@ -44,4 +43,5 @@
     <string name="api_url">https://field.amidocabang.com/api</string>
     <string name="title_activity_profile">Profile</string>
     <string name="action_settings">Settings</string>
+    <string name="teknisi_detail">Detail Teknisi</string>
 </resources>
