@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.zxing.Result;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,8 +30,6 @@ import okhttp3.Response;
 public class ScanActivity extends Activity implements ZXingScannerView.ResultHandler {
 
     private ZXingScannerView mScannerView;
-    //public String apiUrl = getString(R.string.api_url);
-
 
     @Override
     protected  void onCreate(Bundle savedInstanceState) {
@@ -72,46 +73,58 @@ public class ScanActivity extends Activity implements ZXingScannerView.ResultHan
 //        SharedPreferences.Editor editor = sharedPreferences.edit();
 //        editor.putString("SN", rawResult.getText());
 //        editor.apply();
-        //getSN(apiUrl, rawResult.getText());
-
+        getKontrakDataBySN(rawResult.getText());
 
         mScannerView.resumeCameraPreview(this);
-
-//        startActivity(i);
-//        finish();
     }
 
-    private void getSN (String apiUrl, String SN) {
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        String requestBody = "{\n" +
-                " \"SN\": \"" + SN + " \" \n" +
-                "}";
+    private void getKontrakDataBySN (String SN) {
+        MediaType JSON = MediaType.parse("application/x-www-form-urlencoded");
+        String requestBody = "SN=" + SN;
         OkHttpClient client = new OkHttpClient();
         RequestBody body = RequestBody.create(JSON, requestBody);
 
         //start request ke server
         Request request = new Request.Builder()
-                .url(apiUrl)
-                .post(body)
+                .url(getString(R.string.api_url) + "/kontrak")
+                .method("POST", body)
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .build();
 
         //get response async
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                getMsg("Tidak dapat menemukan data SN tersebut atau tidak ada koneksi internet");
+                new AlertDialog.Builder(ScanActivity.this)
+                        .setTitle("Kesalahan")
+                        .setMessage("Tidak dapat menemukan data SN tersebut atau tidak ada koneksi internet")
+                        .create().show();
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-//                SharedPreferences sharedPreferences = getSharedPreferences("Task", MODE_PRIVATE);
-//                SharedPreferences.Editor editor = sharedPreferences.edit();
-                getMsg(response.body().toString());
+                JsonParser parser = new JsonParser();
+                JsonElement element = parser.parse(response.body().string());
+                JsonObject obj = element.getAsJsonObject();
+                if (response.code() == 200) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("kontrak", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("no_kontrak", obj.get("no_kontrak").getAsString());
+                    editor.putString("jns_kontrak", obj.get("jns_kontrak").getAsString());
+                    editor.putString("kode_pelanggan", obj.get("kode_pelanggan").getAsString());
+                    editor.putString("sn_mesin", obj.get("sn_mesin").getAsString());
+                    editor.commit();
+                    startActivity(new Intent(ScanActivity.this, JobsheetActivity.class));
+                    finish();
+                }else {
+                    String status = obj.get("status").getAsString();
+                    String msg = obj.get("message").getAsString();
+                    new AlertDialog.Builder(ScanActivity.this)
+                            .setTitle(status)
+                            .setMessage(msg)
+                            .create().show();
+                }
             }
         });
-    }
-
-    private void getMsg (String msg) {
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 }
