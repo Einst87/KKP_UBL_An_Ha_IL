@@ -51,7 +51,7 @@ public class ProfileActivity extends AppCompatActivity {
 //        }
         final SharedPreferences sharedPreferences = getSharedPreferences("teknisi", MODE_PRIVATE);
         if (!sharedPreferences.getString("foto_teknisi", "").equals("")){
-            Glide.with(this).load("http://goo.gl/gEgYUd").override(150, 150).into(mProfileImg);
+            Glide.with(this).load(sharedPreferences.getString("foto_teknisi", "")).override(150, 150).into(mProfileImg);
         }else{
             Log.d(TAG, "foto_teknisi NULL");
             Glide.with(this).load(R.drawable.default_avatar).override(150, 150).into(mProfileImg);
