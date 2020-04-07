@@ -46,9 +46,6 @@ public class ProfileActivity extends AppCompatActivity {
         mProfileImg = (ImageView) findViewById(R.id.profile_img_view);
 
         mAuth = FirebaseAuth.getInstance();
-//        if (mAuth.getCurrentUser() != null) {
-//            startTrackerService();
-//        }
         final SharedPreferences sharedPreferences = getSharedPreferences("teknisi", MODE_PRIVATE);
         if (!sharedPreferences.getString("foto_teknisi", "").equals("")){
             Glide.with(this).load(sharedPreferences.getString("foto_teknisi", "")).override(150, 150).into(mProfileImg);
@@ -75,9 +72,6 @@ public class ProfileActivity extends AppCompatActivity {
         txtNik.setText(sharedPreferences.getString("nik_teknisi", ""));
         txtMulaiKrj.setText(sharedPreferences.getString("tgl_mulai_krj", ""));
 
-//        SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
-//        String email = sharedPreferences.getString("email", "");
-
         mScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity {
                         .setPositiveButton("Ya", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // hapus smua data sharedpreference login
+                                // hapus smua data sharedpreference login dan service tracker
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 editor.clear().commit();
                                 SharedPreferences ShLogin = getSharedPreferences("login", MODE_PRIVATE);
@@ -105,9 +99,9 @@ public class ProfileActivity extends AppCompatActivity {
                                 ShEdit.clear().commit();
                                 ShEdit.putBoolean("isLogin", false);
                                 ShEdit.commit();
+                                stopService(new Intent(ProfileActivity.this, TrackerService.class));
                                 if (mAuth.getCurrentUser() != null) {
                                     mAuth.signOut();
-                                    stopService(new Intent(ProfileActivity.this, TrackerService.class));
                                 }
                                 startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
                                 finish();
@@ -117,17 +111,9 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void startTrackerService() {
-//        SharedPreferences shTeknisi = getSharedPreferences("teknisi", MODE_PRIVATE);
-//        SharedPreferences shLogin = getSharedPreferences("login", MODE_PRIVATE);
-//        String email = shLogin.getString("email", "");
-//        String pass = shLogin.getString("password", "");
-//        String nik = shTeknisi.getString("nik_teknisi","");
-//        Intent intent = new Intent(this, TrackerService.class);
-//        intent.putExtra("email", email);
-//        intent.putExtra("password", pass);
-//        intent.putExtra("nik", nik);
-        //startService(intent);
-        startService(new Intent(this, TrackerService.class));
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 }

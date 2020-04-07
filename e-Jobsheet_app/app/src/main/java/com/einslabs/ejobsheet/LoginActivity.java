@@ -115,7 +115,6 @@ public class LoginActivity extends Activity {
                             @Override
                             public void onComplete(Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    startService(new Intent(LoginActivity.this, TrackerService.class));
                                     getTeknisiData(mEmail.getText().toString());
                                 } else {
                                     //Log.d(TAG, "firebase auth failed");
@@ -173,6 +172,7 @@ public class LoginActivity extends Activity {
                     editor.putString("latitude", obj.get("latitude").getAsString());
                     editor.commit();
                     startActivity(new Intent(LoginActivity.this, ProfileActivity.class));
+                    startService(new Intent(LoginActivity.this, TrackerService.class));
                     finish();
                 }else{
                     String status = obj.get("status").getAsString();
@@ -212,8 +212,8 @@ public class LoginActivity extends Activity {
         if (currentUser != null) {
             SharedPreferences sharedPreferences = getSharedPreferences("login", MODE_PRIVATE);
             if (sharedPreferences.getBoolean("isLogin", false)) {
-                startService(new Intent(this, TrackerService.class));
                 startActivity(new Intent(this, ProfileActivity.class));
+                startService(new Intent(this, TrackerService.class));
                 finish();
             }
         }

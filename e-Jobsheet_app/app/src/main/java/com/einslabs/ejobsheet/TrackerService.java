@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,7 +13,6 @@ import android.location.Location;
 import android.os.IBinder;
 import android.util.Log;
 
-import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -23,42 +21,49 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.Map;
-import java.util.Set;
 
 public class TrackerService extends Service {
 
     private static final String TAG = TrackerService.class.getSimpleName();
-//    Intent i = getIntent();
-    //private static String email ; //= i.getStringExtra("email");
-    //private static String password ; //= i.getStringExtra("password");
-    private static String nik ; //= i.getStringExtra("nik");
-    //private FirebaseAuth mAuth;
+    FusedLocationProviderClient client;
+    LocationRequest request;
 
     @Override
     public IBinder onBind(Intent intent) {return null;}
+
+    LocationCallback mlocationCallback = new LocationCallback(){
+        @Override
+        public void onLocationResult (LocationResult locationResult) {
+            SharedPreferences sharedPreferences = getSharedPreferences("teknisi", MODE_PRIVATE);
+            final String path = getString(R.string.firebase_path) + "/" +  sharedPreferences.getString("nik_teknisi", "");
+
+            // received, store the location in Firebase
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
+            Location location = locationResult.getLastLocation();
+            if (location != null) {
+                Log.d(TAG, "location update " + location);
+                ref.setValue(location);
+            }
+        }
+    };
 
     @Override
     public void onCreate() {
         super.onCreate();
         buildNotification();
         requestLocationUpdates();
-        //loginToFirebase("andi.play87@gmail.com", "andi0487");
+    }
 
-//        mAuth = FirebaseAuth.getInstance();
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if (currentUser != null) {
-//            requestLocationUpdates();
-//        }
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(stopReceiver);
+        if (client != null) {
+            client.removeLocationUpdates(mlocationCallback);
+        }
+        stopSelf();
     }
 
     private void buildNotification() {
@@ -86,46 +91,17 @@ public class TrackerService extends Service {
         }
     };
 
-//    private void loginToFirebase(final String email, final String password) {
-//        // Authenticate with Firebase, and request location updates
-//        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>(){
-//            @Override
-//            public void onComplete(Task<AuthResult> task) {
-//                if (task.isSuccessful()) {
-//                    Log.d(TAG, "firebase auth success");
-//                    requestLocationUpdates();
-//                } else {
-//                    Log.d(TAG, "firebase auth failed");
-//                }
-//            }
-//        });
-//    }
-
     private void requestLocationUpdates() {
-        SharedPreferences sharedPreferences = getSharedPreferences("teknisi", MODE_PRIVATE);
-        LocationRequest request = new LocationRequest();
+        client = LocationServices.getFusedLocationProviderClient(this);
+        request = new LocationRequest();
         request.setInterval(10000);
         request.setFastestInterval(5000);
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
-        final String path = getString(R.string.firebase_path) + "/" +  sharedPreferences.getString("nik_teknisi", "");
         int permission = ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
         if (permission == PackageManager.PERMISSION_GRANTED) {
             // Request location updates and when an update is
-            // received, store the location in Firebase
-            client.requestLocationUpdates(request, new LocationCallback() {
-                @Override
-                public void onLocationResult(LocationResult locationResult) {
-                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference(path);
-                    Location location = locationResult.getLastLocation();
-                    if (location != null) {
-                        Log.d(TAG, "location update " + location);
-                        ref.setValue(location);
-                    }
-                }
-            }, null);
+            client.requestLocationUpdates(request, mlocationCallback, null );
         }
     }
-
 }

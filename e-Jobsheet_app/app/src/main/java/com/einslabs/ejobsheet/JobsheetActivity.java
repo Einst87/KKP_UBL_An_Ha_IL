@@ -29,16 +29,19 @@ import okhttp3.Response;
 
 public class JobsheetActivity extends Activity {
 
+    private String kdPelanggan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.jobsheet_view);
 
         SharedPreferences sharedPreferences = getSharedPreferences("kontrak", MODE_PRIVATE);
-        sharedPreferences.getString("kode_pelanggan","");
+        kdPelanggan = sharedPreferences.getString("kode_pelanggan","");
+        getData("kdplg", kdPelanggan, "pelanggan");
     }
 
-    private void getData (String keyN, String keyV, String path) {
+    private void getData (String keyN, String keyV, String func) {
         MediaType JSON = MediaType.parse("application/x-www-form-urlencoded");
         String requestBody = keyN + "=" + keyV;
         OkHttpClient client = new OkHttpClient();
@@ -46,7 +49,7 @@ public class JobsheetActivity extends Activity {
 
         //start request ke server
         Request request = new Request.Builder()
-                .url(getString(R.string.api_url) + "/" + path)
+                .url(getString(R.string.api_url) + "/" + func)
                 .method("POST", body)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .build();
